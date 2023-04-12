@@ -29,8 +29,8 @@ body {
 footer {
 	text-align: center;
 	padding: 3px;
-	background-color: DarkSalmon;
-	color: white;
+	color: salmon;
+	bottom: 0;
   }
 
 .overlay {
