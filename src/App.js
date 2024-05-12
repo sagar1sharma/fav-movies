@@ -6,12 +6,12 @@ import MovieListHeading from "./components/movielistheading";
 import SearchBox from "./components/searchbox";
 import AddFavourites from "./components/addtofav";
 import RemoveFavourites from "./components/removefav";
-import Footer from "./components/footer";
 
 const App = () => {
 	const [movies, setMovies] = useState([]);
 	const [favourites, setFavourites] = useState([]);
 	const [searchValue, setSearchValue] = useState('');
+	const [ra, setra] = useState('https://vidcloud9.me/watch-');
 
 	const getMovieRequest = async (searchValue) => {
 		const url = `https://www.omdbapi.com/?s=${searchValue}&apikey=263d22d8`;
@@ -41,7 +41,7 @@ const App = () => {
 				};
 				movies.push(meetup);
 			}
-
+			movies.reverse();
 			setFavourites(movies);
 		})
 	}, [])
@@ -49,23 +49,36 @@ const App = () => {
 	const addFavouriteMovie = (movie) => {
 		const newFavouriteList = [...favourites, movie];
 		setFavourites(newFavouriteList);
-		fetch('https://fav-movie-b549e-default-rtdb.firebaseio.com/movies.json',
-			{
-				method: 'POST',
-				body: JSON.stringify(movie),
-				headers: {
-					'Content-Type': 'application/json'
+		var flag = false;
+
+		fetch('https://fav-movie-b549e-default-rtdb.firebaseio.com/movies.json')
+		.then(res => {return res.json()})
+		.then(data => {
+
+			for(const key in data){
+				if(key.Title.Text === movie.Search.Title){
+					flag = true;
 				}
 			}
-		);
+
+		})
+
+		if(flag === false){
+			fetch('https://fav-movie-b549e-default-rtdb.firebaseio.com/movies.json',
+				{
+					method: 'POST',
+					body: JSON.stringify(movie),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}
+			);
+		}
 	};
 
 	const removeFavouriteMovie = (movie) => {
-		const newFavouriteList = favourites.filter(
-			(favourite) => favourite.imdbID !== movie.imdbID
-		);
-
-		setFavourites(newFavouriteList);
+		setra('https://yts.autos/movies/'+movie.Title+'-'+movie.Year);
+		<RemoveFavourites add={ra} />
 	};
 
 	return (
@@ -89,7 +102,7 @@ const App = () => {
 				<MovieList
 					movies={favourites}
 					handleFavouritesClick={removeFavouriteMovie}
-					favouriteComponent={RemoveFavourites}
+					favouriteComponent={RemoveFavourites }
 				/>
 			</div>
 		</div>
