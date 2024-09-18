@@ -41,7 +41,6 @@ const App = () => {
 				};
 				movies.push(meetup);
 			}
-			movies.reverse();
 			setFavourites(movies);
 		})
 	}, [])
